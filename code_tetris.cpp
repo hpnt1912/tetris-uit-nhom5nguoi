@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <ctime>
 using namespace std;
 #define H 20
 #define W 15
@@ -171,7 +172,7 @@ int main()
         else {
             block2Board();
             removeLine();
-            x = 5; y = 0; b = rand() % 7;
+            x = W/2; y = 0; b = rand() % 7;
         }
         block2Board();
         draw();
