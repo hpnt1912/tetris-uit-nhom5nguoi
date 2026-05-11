@@ -98,11 +98,33 @@ void initBoard(){
             if ((i==H-1) || (j==0) || (j == W-1)) board[i][j] = '#';
             else board[i][j] = ' ';
 }
-void draw(){
-    gotoxy(0,0);
-    for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++)
-            cout<<board[i][j];
+void draw() {
+    gotoxy(0, 0);
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            char cell = board[i][j];
+            if (cell == '#') {
+                setColor(8); // Màu xám cho tường
+                cout << "[]";
+            }
+            else if (cell == ' ') {
+                cout << "  "; // Hai dấu cách để tạo ô vuông trống
+            }
+            else {
+                // Đặt màu dựa trên ký tự khối (I, O, T, S, Z, J, L)
+                if (cell == 'I') setColor(11); // Cyan
+                else if (cell == 'O') setColor(14); // Yellow
+                else if (cell == 'T') setColor(13); // Purple
+                else if (cell == 'S') setColor(10); // Green
+                else if (cell == 'Z') setColor(12); // Red
+                else if (cell == 'J') setColor(9);  // Blue
+                else if (cell == 'L') setColor(6);  // Orange
+
+                cout << "[]"; // Vẽ khối bằng cặp ngoặc vuông cho rõ
+            }
+        }
+        cout << endl;
+    }
 }
 bool canMove(int dx, int dy){
     for (int i = 0 ; i < 4 ; i++)
