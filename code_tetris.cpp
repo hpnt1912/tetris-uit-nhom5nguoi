@@ -84,7 +84,7 @@ void gotoxy(int x, int y) {
 void boardDelBlock(){
     for (int i = 0 ; i < 4 ; i++)
         for (int j = 0 ; j < 4 ; j++)
-            if (blocks[b][i][j] != ' ' && y+j < H)
+            if (blocks[b][i][j] != ' ' && y+i < H)
                 board[y+i][x+j] = ' ';
 }
 void block2Board(){
@@ -164,7 +164,7 @@ void removeLine(){
                 for (int j = 0; j < W-1 ; j++ ) board[ii][j] = board[ii-1][j];
             i++;
             draw();
-            _sleep(200);
+            _sleep(100);
         }
     }
 }
@@ -193,7 +193,7 @@ int main()
         }
         block2Board();
         draw();
-        _sleep(200);
+        _sleep(300);
     }
     return 0;
 }
