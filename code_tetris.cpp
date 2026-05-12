@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <ctime>
 using namespace std;
 #define H 20
 #define W 15
@@ -73,6 +74,9 @@ char blocks[][4][4] = {
 };
 
 int x=4,y=0,b=1;
+void setColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
 void gotoxy(int x, int y) {
     COORD c = {x, y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
@@ -95,11 +99,33 @@ void initBoard(){
             if ((i==H-1) || (j==0) || (j == W-1)) board[i][j] = '#';
             else board[i][j] = ' ';
 }
-void draw(){
-    gotoxy(0,0);
-    for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++)
-            cout<<board[i][j];
+void draw() {
+    gotoxy(0, 0);
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            char cell = board[i][j];
+            if (cell == '#') {
+                setColor(8); // Màu xám cho tường
+                cout << "[]";
+            }
+            else if (cell == ' ') {
+                cout << "  "; // Hai dấu cách để tạo ô vuông trống
+            }
+            else {
+                // Đặt màu dựa trên ký tự khối (I, O, T, S, Z, J, L)
+                if (cell == 'I') setColor(11); // Cyan
+                else if (cell == 'O') setColor(14); // Yellow
+                else if (cell == 'T') setColor(13); // Purple
+                else if (cell == 'S') setColor(10); // Green
+                else if (cell == 'Z') setColor(12); // Red
+                else if (cell == 'J') setColor(9);  // Blue
+                else if (cell == 'L') setColor(6);  // Orange
+
+                cout << "[]"; // Vẽ khối bằng cặp ngoặc vuông cho rõ
+            }
+        }
+        cout << endl;
+    }
 }
 bool canMove(int dx, int dy){
     for (int i = 0 ; i < 4 ; i++)
@@ -111,6 +137,22 @@ bool canMove(int dx, int dy){
                 if ( board[ty][tx] != ' ') return false;
             }
     return true;
+}
+void rotateBlock() {
+    char temp[4][4];
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            temp[j][3 - i] = blocks[b][i][j];
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (temp[i][j] != ' ') {
+                int tx = x + j, ty = y + i;
+                if (tx < 1 || tx >= W - 1 || ty >= H - 1 || board[ty][tx] != ' ') 
+                    return; 
+            }
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            blocks[b][i][j] = temp[i][j];
 }
 void removeLine(){
     int j;
@@ -140,13 +182,14 @@ int main()
             if (c=='a' && canMove(-1,0)) x--;
             if (c=='d' && canMove(1,0) ) x++;
             if (c=='x' && canMove(0,1))  y++;
+            if (c == 'w') rotateBlock();
             if (c=='q') break;
         }
         if (canMove(0,1)) y++;
         else {
             block2Board();
             removeLine();
-            x = 5; y = 0; b = rand() % 7;
+            x = W/2; y = 0; b = rand() % 7;
         }
         block2Board();
         draw();
