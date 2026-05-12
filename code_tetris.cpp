@@ -13,7 +13,7 @@ using namespace std;
 char board[H][W] = {};
  
 // ===================== 7 BLOCKS (1 rotation set each) =====================
-// M?i kh?i cÛ 4 tr?ng th·i xoay, m?i tr?ng th·i l‡ ma tr?n 4x4
+// M?i kh?i c√≥ 4 tr?ng th√°i xoay, m?i tr?ng th√°i l√† ma tr?n 4x4
 // Index: 0=I, 1=O, 2=T, 3=S, 4=Z, 5=J, 6=L
 char blocks[7][4][4][4] = {
     // 0: I - Cyan
@@ -144,9 +144,9 @@ char blocks[7][4][4][4] = {
 };
  
 // ===================== GAME STATE =====================
-int px = 4, py = 0;      // v? trÌ kh?i hi?n t?i
+int px = 4, py = 0;      // v? tr√≠ kh?i hi?n t?i
 int curBlock = 0;         // lo?i kh?i (0-6)
-int curRot = 0;           // tr?ng th·i xoay (0-3)
+int curRot = 0;           // tr?ng th√°i xoay (0-3)
 int score = 0;
 bool gameOver = false;
  
@@ -223,7 +223,7 @@ void clearFromBoard(int bType, int rot, int bx, int by) {
             }
 }
  
-// Ghost piece: tÌnh v? trÌ shadow (kh?i bÛng)
+// Ghost piece: t√≠nh v? tr√≠ shadow (kh?i b√≥ng)
 int ghostY() {
     int gy = py;
     while (canPlace(curBlock, curRot, px, gy + 1)) gy++;
@@ -254,7 +254,7 @@ void draw() {
                 setColor(8);
                 cout << "  ";
             } else if (cell == '.') {
-                setColor(8);  // ghost - x·m nh?t
+                setColor(8);  // ghost - x√°m nh?t
                 cout << "::";
             } else {
                 if      (cell == 'I') setColor(11);
@@ -267,7 +267,7 @@ void draw() {
                 cout << "[]";
             }
         }
-        // Hi?n score ? bÍn ph?i
+        // Hi?n score ? b√™n ph?i
         if (i == 2) { setColor(15); cout << "  SCORE"; }
         if (i == 3) { setColor(14); cout << "  " << score; }
         if (i == 5) { setColor(15); cout << "  CONTROLS"; }
@@ -279,7 +279,7 @@ void draw() {
         cout << "\n";
     }
  
-    // XÛa ghost kh?i board sau khi v?
+    // X√≥a ghost kh?i board sau khi v?
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (blocks[curBlock][curRot][i][j] != ' ') {
@@ -301,7 +301,7 @@ void removeLines() {
                 for (int j = 1; j < W-1; j++)
                     board[ii][j] = board[ii-1][j];
             for (int j = 1; j < W-1; j++) board[1][j] = ' ';
-            i++; // ki?m tra l?i dÚng n‡y
+            i++; // ki?m tra l?i d√≤ng n√†y
         }
     }
 }
@@ -352,7 +352,7 @@ int main() {
             char c = getch();
             clearFromBoard(curBlock, curRot, px, py);
  
-            if (c == 'a' || c == 75) { // tr·i
+            if (c == 'a' || c == 75) { // tr√°i
                 if (canPlace(curBlock, curRot, px-1, py)) px--;
             }
             else if (c == 'd' || c == 77) { // ph?i
