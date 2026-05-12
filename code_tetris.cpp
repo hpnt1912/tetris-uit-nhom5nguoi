@@ -1,7 +1,10 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+<<<<<<< Updated upstream
 #include <ctime>
+=======
+>>>>>>> Stashed changes
 using namespace std;
 #define H 20
 #define W 15
@@ -74,9 +77,12 @@ char blocks[][4][4] = {
 };
 
 int x=4,y=0,b=1;
+<<<<<<< Updated upstream
 void setColor(int color) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
+=======
+>>>>>>> Stashed changes
 void gotoxy(int x, int y) {
     COORD c = {x, y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
@@ -84,7 +90,11 @@ void gotoxy(int x, int y) {
 void boardDelBlock(){
     for (int i = 0 ; i < 4 ; i++)
         for (int j = 0 ; j < 4 ; j++)
+<<<<<<< Updated upstream
             if (blocks[b][i][j] != ' ' && y+i < H)
+=======
+            if (blocks[b][i][j] != ' ' && y+j < H)
+>>>>>>> Stashed changes
                 board[y+i][x+j] = ' ';
 }
 void block2Board(){
@@ -99,6 +109,7 @@ void initBoard(){
             if ((i==H-1) || (j==0) || (j == W-1)) board[i][j] = '#';
             else board[i][j] = ' ';
 }
+<<<<<<< Updated upstream
 void draw() {
     gotoxy(0, 0);
     for (int i = 0; i < H; i++) {
@@ -126,6 +137,13 @@ void draw() {
         }
         cout << endl;
     }
+=======
+void draw(){
+    gotoxy(0,0);
+    for (int i = 0 ; i < H ; i++, cout<<endl)
+        for (int j = 0 ; j < W ; j++)
+            cout<<board[i][j];
+>>>>>>> Stashed changes
 }
 bool canMove(int dx, int dy){
     for (int i = 0 ; i < 4 ; i++)
@@ -138,6 +156,7 @@ bool canMove(int dx, int dy){
             }
     return true;
 }
+<<<<<<< Updated upstream
 void rotateBlock() {
     char temp[4][4];
     for (int i = 0; i < 4; i++)
@@ -154,6 +173,8 @@ void rotateBlock() {
         for (int j = 0; j < 4; j++)
             blocks[b][i][j] = temp[i][j];
 }
+=======
+>>>>>>> Stashed changes
 void removeLine(){
     int j;
     for (int i = H-2; i >0 ; i-- ){
@@ -164,7 +185,11 @@ void removeLine(){
                 for (int j = 0; j < W-1 ; j++ ) board[ii][j] = board[ii-1][j];
             i++;
             draw();
+<<<<<<< Updated upstream
             _sleep(100);
+=======
+            _sleep(200);
+>>>>>>> Stashed changes
         }
     }
 }
@@ -182,13 +207,17 @@ int main()
             if (c=='a' && canMove(-1,0)) x--;
             if (c=='d' && canMove(1,0) ) x++;
             if (c=='x' && canMove(0,1))  y++;
+<<<<<<< Updated upstream
             if (c == 'w') rotateBlock();
+=======
+>>>>>>> Stashed changes
             if (c=='q') break;
         }
         if (canMove(0,1)) y++;
         else {
             block2Board();
             removeLine();
+<<<<<<< Updated upstream
             x = W/2; y = 0; b = rand() % 7;
         }
         block2Board();
@@ -197,3 +226,13 @@ int main()
     }
     return 0;
 }
+=======
+            x = 5; y = 0; b = rand() % 7;
+        }
+        block2Board();
+        draw();
+        _sleep(200);
+    }
+    return 0;
+}
+>>>>>>> Stashed changes
