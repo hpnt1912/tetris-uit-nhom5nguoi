@@ -13,7 +13,7 @@ using namespace std;
 char board[H][W] = {};
  
 // ===================== 7 BLOCKS (1 rotation set each) =====================
-// M?i kh?i c� 4 tr?ng th�i xoay, m?i tr?ng th�i l� ma tr?n 4x4
+// Mỗi khối có 4 trạng thái xoay, mỗi trạng thái là ma trận 4x4
 // Index: 0=I, 1=O, 2=T, 3=S, 4=Z, 5=J, 6=L
 char blocks[7][4][4][4] = {
     // 0: I - Cyan
@@ -144,9 +144,9 @@ char blocks[7][4][4][4] = {
 };
  
 // ===================== GAME STATE =====================
-int px = 4, py = 0;      // v? tr� kh?i hi?n t?i
-int curBlock = 0;         // lo?i kh?i (0-6)
-int curRot = 0;           // tr?ng th�i xoay (0-3)
+int px = 4, py = 0;      // vị trí khối hiện tại
+int curBlock = 0;         // loại khối (0-6)
+int curRot = 0;           // trạng thái xoay (0-3)
 int score = 0;
 bool gameOver = false;
  
@@ -223,7 +223,7 @@ void clearFromBoard(int bType, int rot, int bx, int by) {
             }
 }
  
-// Ghost piece: t�nh v? tr� shadow (kh?i b�ng)
+// Ghost piece: tính vị trí shadow (khối bóng)
 int ghostY() {
     int gy = py;
     while (canPlace(curBlock, curRot, px, gy + 1)) gy++;
@@ -234,7 +234,7 @@ int ghostY() {
 void draw() {
     gotoxy(0, 0);
  
-    // V? ghost piece
+    // Vẽ ghost piece
     int gy = ghostY();
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
@@ -254,7 +254,7 @@ void draw() {
                 setColor(8);
                 cout << "  ";
             } else if (cell == '.') {
-                setColor(8);  // ghost - x�m nh?t
+                setColor(8);  // ghost - xám nhạt
                 cout << "::";
             } else {
                 if      (cell == 'I') setColor(11);
@@ -267,7 +267,7 @@ void draw() {
                 cout << "[]";
             }
         }
-        // Hi?n score ? b�n ph?i
+        // Hiện score ở bên phải
         if (i == 2) { setColor(15); cout << "  SCORE"; }
         if (i == 3) { setColor(14); cout << "  " << score; }
         if (i == 5) { setColor(15); cout << "  CONTROLS"; }
@@ -279,7 +279,7 @@ void draw() {
         cout << "\n";
     }
  
-    // X�a ghost kh?i board sau khi v?
+    // Xóa ghost khỏi board sau khi vẽ
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (blocks[curBlock][curRot][i][j] != ' ') {
@@ -301,7 +301,7 @@ void removeLines() {
                 for (int j = 1; j < W-1; j++)
                     board[ii][j] = board[ii-1][j];
             for (int j = 1; j < W-1; j++) board[1][j] = ' ';
-            i++; // ki?m tra l?i d�ng n�y
+            i++; // kiểm tra lại dòng này
         }
     }
 }
@@ -344,7 +344,7 @@ int main() {
     spawnBlock();
  
     DWORD lastFall = GetTickCount();
-    int fallInterval = 500; // ms m?i bu?c r?t xu?ng
+    int fallInterval = 500; // ms mỗi bước rớt xuống
  
     while (!gameOver) {
         // --- INPUT ---
@@ -352,10 +352,10 @@ int main() {
             char c = getch();
             clearFromBoard(curBlock, curRot, px, py);
  
-            if (c == 'a' || c == 75) { // tr�i
+            if (c == 'a' || c == 75) { // trái
                 if (canPlace(curBlock, curRot, px-1, py)) px--;
             }
-            else if (c == 'd' || c == 77) { // ph?i
+            else if (c == 'd' || c == 77) { // phải
                 if (canPlace(curBlock, curRot, px+1, py)) px++;
             }
             else if (c == 's' || c == 80) { // soft drop
@@ -380,7 +380,7 @@ int main() {
             else if (c == 'w') { // xoay
                 int newRot = (curRot + 1) % 4;
                 if (canPlace(curBlock, newRot, px, py)) curRot = newRot;
-                // Wall kick don gi?n
+                // Wall kick đơn giản
                 else if (canPlace(curBlock, newRot, px+1, py)) { curRot = newRot; px++; }
                 else if (canPlace(curBlock, newRot, px-1, py)) { curRot = newRot; px--; }
             }
