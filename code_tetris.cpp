@@ -2,11 +2,8 @@
 #include <conio.h>
 #include <windows.h>
 #include <ctime>
-<<<<<<< Updated upstream
-=======
 #include <algorithm>
 #include <random>
->>>>>>> Stashed changes
 using namespace std;
  
 #define H 22
@@ -16,7 +13,7 @@ using namespace std;
 char board[H][W] = {};
  
 // ===================== 7 BLOCKS (1 rotation set each) =====================
-// M?i kh?i cÛ 4 tr?ng th·i xoay, m?i tr?ng th·i l‡ ma tr?n 4x4
+// M?i kh?i c√≥ 4 tr?ng th√°i xoay, m?i tr?ng th√°i l√† ma tr?n 4x4
 // Index: 0=I, 1=O, 2=T, 3=S, 4=Z, 5=J, 6=L
 char blocks[7][4][4][4] = {
     // 0: I - Cyan
@@ -145,15 +142,11 @@ char blocks[7][4][4][4] = {
       {' ','L','L',' '},
       {' ',' ',' ',' '}}}
 };
-<<<<<<< Updated upstream
-
-int x=4,y=0,b=1;
-=======
  
 // ===================== GAME STATE =====================
-int px = 4, py = 0;      // v? trÌ kh?i hi?n t?i
+int px = 4, py = 0;      // v? tr√≠ kh?i hi?n t?i
 int curBlock = 0;         // lo?i kh?i (0-6)
-int curRot = 0;           // tr?ng th·i xoay (0-3)
+int curRot = 0;           // tr?ng th√°i xoay (0-3)
 int score = 0;
 bool gameOver = false;
  
@@ -177,7 +170,6 @@ int nextBlock() {
 }
  
 // ===================== HELPERS =====================
->>>>>>> Stashed changes
 void setColor(int color) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
@@ -185,17 +177,9 @@ void gotoxy(int x, int y) {
     COORD c = {(SHORT)x, (SHORT)y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
-<<<<<<< Updated upstream
-void boardDelBlock(){
-    for (int i = 0 ; i < 4 ; i++)
-        for (int j = 0 ; j < 4 ; j++)
-            if (blocks[b][i][j] != ' ' && y+i < H)
-                board[y+i][x+j] = ' ';
-=======
 void hideCursor() {
     CONSOLE_CURSOR_INFO ci = {1, FALSE};
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &ci);
->>>>>>> Stashed changes
 }
  
 // ===================== BOARD =====================
@@ -206,8 +190,6 @@ void initBoard() {
             else board[i][j] = ' ';
         }
 }
-<<<<<<< Updated upstream
-=======
  
 bool canPlace(int bType, int rot, int bx, int by) {
     for (int i = 0; i < 4; i++)
@@ -241,7 +223,7 @@ void clearFromBoard(int bType, int rot, int bx, int by) {
             }
 }
  
-// Ghost piece: tÌnh v? trÌ shadow (kh?i bÛng)
+// Ghost piece: t√≠nh v? tr√≠ shadow (kh?i b√≥ng)
 int ghostY() {
     int gy = py;
     while (canPlace(curBlock, curRot, px, gy + 1)) gy++;
@@ -249,7 +231,6 @@ int ghostY() {
 }
  
 // ===================== DRAW =====================
->>>>>>> Stashed changes
 void draw() {
     gotoxy(0, 0);
  
@@ -273,7 +254,7 @@ void draw() {
                 setColor(8);
                 cout << "  ";
             } else if (cell == '.') {
-                setColor(8);  // ghost - x·m nh?t
+                setColor(8);  // ghost - x√°m nh?t
                 cout << "::";
             } else {
                 if      (cell == 'I') setColor(11);
@@ -286,7 +267,7 @@ void draw() {
                 cout << "[]";
             }
         }
-        // Hi?n score ? bÍn ph?i
+        // Hi?n score ? b√™n ph?i
         if (i == 2) { setColor(15); cout << "  SCORE"; }
         if (i == 3) { setColor(14); cout << "  " << score; }
         if (i == 5) { setColor(15); cout << "  CONTROLS"; }
@@ -297,26 +278,14 @@ void draw() {
         if (i == 10){ setColor(7);  cout << "  Q: Quit"; }
         cout << "\n";
     }
-<<<<<<< Updated upstream
-}
-bool canMove(int dx, int dy){
-    for (int i = 0 ; i < 4 ; i++)
-        for (int j = 0 ; j < 4 ; j++)
-            if (blocks[b][i][j] != ' '){
-                int tx = x + j + dx;
-                int ty = y + i + dy;
-                if ( tx<1 || tx >= W-1 || ty >= H-1) return false;
-                if ( board[ty][tx] != ' ') return false;
-=======
  
-    // XÛa ghost kh?i board sau khi v?
+    // X√≥a ghost kh?i board sau khi v?
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (blocks[curBlock][curRot][i][j] != ' ') {
                 int tx = px + j, ty = gy + i;
                 if (ty >= 0 && ty < H && tx >= 0 && tx < W && board[ty][tx] == '.')
                     board[ty][tx] = ' ';
->>>>>>> Stashed changes
             }
 }
  
@@ -332,7 +301,7 @@ void removeLines() {
                 for (int j = 1; j < W-1; j++)
                     board[ii][j] = board[ii-1][j];
             for (int j = 1; j < W-1; j++) board[1][j] = ' ';
-            i++; // ki?m tra l?i dÚng n‡y
+            i++; // ki?m tra l?i d√≤ng n√†y
         }
     }
 }
@@ -349,43 +318,6 @@ bool spawnBlock() {
     }
     return true;
 }
-<<<<<<< Updated upstream
-void rotateBlock() {
-    char temp[4][4];
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            temp[j][3 - i] = blocks[b][i][j];
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (temp[i][j] != ' ') {
-                int tx = x + j, ty = y + i;
-                if (tx < 1 || tx >= W - 1 || ty >= H - 1 || board[ty][tx] != ' ') 
-                    return; 
-            }
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            blocks[b][i][j] = temp[i][j];
-}
-void removeLine(){
-    int j;
-    for (int i = H-2; i >0 ; i-- ){
-        for (j = 0; j < W-1 ; j++)
-            if (board[i][j] == ' ') break;
-        if (j == W-1){
-            for (int ii = i; ii >0 ; ii-- )
-                for (int j = 0; j < W-1 ; j++ ) board[ii][j] = board[ii-1][j];
-            i++;
-            draw();
-            _sleep(100);
-        }
-    }
-}
-
-int main()
-{
-    srand(time(0));
-    b = rand() % 7;
-=======
  
 // ===================== GAME OVER SCREEN =====================
 void showGameOver() {
@@ -407,7 +339,6 @@ void showGameOver() {
 int main() {
     srand((unsigned)time(0));
     hideCursor();
->>>>>>> Stashed changes
     system("cls");
     initBoard();
     spawnBlock();
@@ -419,22 +350,9 @@ int main() {
         // --- INPUT ---
         if (kbhit()) {
             char c = getch();
-<<<<<<< Updated upstream
-            if (c=='a' && canMove(-1,0)) x--;
-            if (c=='d' && canMove(1,0) ) x++;
-            if (c=='x' && canMove(0,1))  y++;
-            if (c == 'w') rotateBlock();
-            if (c=='q') break;
-        }
-        if (canMove(0,1)) y++;
-        else {
-            block2Board();
-            removeLine();
-            x = W/2; y = 0; b = rand() % 7;
-=======
             clearFromBoard(curBlock, curRot, px, py);
  
-            if (c == 'a' || c == 75) { // tr·i
+            if (c == 'a' || c == 75) { // tr√°i
                 if (canPlace(curBlock, curRot, px-1, py)) px--;
             }
             else if (c == 'd' || c == 77) { // ph?i
@@ -488,7 +406,6 @@ int main() {
             }
             placeOnBoard(curBlock, curRot, px, py);
             lastFall = now;
->>>>>>> Stashed changes
         }
  
         // --- RENDER ---
