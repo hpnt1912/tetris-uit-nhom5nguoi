@@ -303,8 +303,8 @@ int px = 4, py = 0;      // v? trí kh?i hi?n t?i
 Piece* curPiece = nullptr;
 int score = 0;
 bool gameOver = false;
- 
-// ===================== 7-BAG RANDOMIZER =====================
+ int fallInterval = 500;
+// ==========int fallInterval = 500;=========== 7-BAG RANDOMIZER =====================
 int bag[7];
 int bagIdx = 7; // force refill on first use
  
@@ -464,6 +464,8 @@ void removeLines() {
             if (board[i][j] == ' ') { full = false; break; }
         if (full) {
             score += 100;
+            if (fallInterval > 100)
+    fallInterval -= 20;
             for (int ii = i; ii > 1; ii--)
                 for (int j = 1; j < W-1; j++)
                     board[ii][j] = board[ii-1][j];
@@ -518,8 +520,7 @@ int main() {
     spawnBlock();
  
     DWORD lastFall = GetTickCount();
-    int fallInterval = 500; // ms m?i bu?c r?t xu?ng
- 
+
     while (!gameOver) {
         // --- INPUT ---
         if (kbhit()) {
