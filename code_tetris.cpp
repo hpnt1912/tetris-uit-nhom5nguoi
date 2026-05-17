@@ -300,8 +300,7 @@ public:
  
 // ===================== GAME STATE =====================
 int px = 4, py = 0;      // v? trí kh?i hi?n t?i
-int curBlock = 0;
-int curRot = 0;
+Piece* curPiece = nullptr;
 int score = 0;
 bool gameOver = false;
  
@@ -319,10 +318,22 @@ void fillBag() {
     bagIdx = 0;
 }
  
+Piece* createPiece(int type) {
+    switch (type) {
+    case 0: return new IPiece();
+    case 1: return new OPiece();
+    case 2: return new TPiece();
+    case 3: return new SPiece();
+    case 4: return new ZPiece();
+    case 5: return new JPiece();
+    case 6: return new LPiece();
+    }
+    return nullptr;
+}
 
-int nextBlock()() {
+Piece* nextBlock() {
     if (bagIdx >= 7) fillBag();
-    return bag[bagIdx++];
+    return createPiece(bag[bagIdx++]);
 }
  
 // ===================== HELPERS =====================
@@ -464,14 +475,21 @@ void removeLines() {
  
 // ===================== SPAWN =====================
 bool spawnBlock() {
-    curBlock = nextBlock();
-    curRot = 0;
+
+    if (curPiece) delete curPiece;
+
+    curPiece = nextBlock();
+
     px = W / 2 - 2;
     py = 0;
-    if (!canPlace(curBlock, curRot, px, py)) {
+
+    curPiece->rot = 0;
+
+    if (!canPlace(curPiece, curPiece->rot, px, py)) {
         gameOver = true;
         return false;
     }
+
     return true;
 }
  
@@ -571,5 +589,6 @@ int main() {
  
     if (gameOver) showGameOver();
     setColor(7);
+    if (curPiece) delete curPiece;
     return 0;
 }
