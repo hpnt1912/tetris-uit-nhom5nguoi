@@ -466,6 +466,8 @@ void removeLines() {
         for (int j = 1; j < W-1; j++)
             if (board[i][j] == ' ') { full = false; break; }
         if (full) {
+            // Board sends clear-line event here
+// Increase score and game speed after line clear
             score += 100;
             if (fallInterval > 100)
     fallInterval -= 20;
