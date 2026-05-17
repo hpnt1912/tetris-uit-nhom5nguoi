@@ -319,8 +319,6 @@ void fillBag() {
 }
  
 Piece* createPiece(int type) {
-    switch (type) {
-    case 0: return new IPiece();
     case 1: return new OPiece();
     case 2: return new TPiece();
     case 3: return new SPiece();
@@ -358,10 +356,10 @@ void initBoard() {
         }
 }
  
-bool canPlace(int bType, int rot, int bx, int by) {
+bool canPlace(Piece* piece, int bx, int by) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[bType][rot][i][j] != ' ') {
+            if (curPiece->getShape(i,j) != ' ') {
                 int tx = bx + j;
                 int ty = by + i;
                 if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
@@ -370,20 +368,22 @@ bool canPlace(int bType, int rot, int bx, int by) {
     return true;
 }
  
-void placeOnBoard(int bType, int rot, int bx, int by) {
+void placeOnBoard(Piece* piece, int bx, int by) {
     for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (blocks[bType][rot][i][j] != ' ') {
+        for (int j = 0; j < 4; j++){
+            char shapeChar = piece->getShape(i, j);
+            if (shapeChar != ' ') {
                 int tx = bx + j, ty = by + i;
                 if (ty >= 0 && ty < H && tx >= 0 && tx < W)
-                    board[ty][tx] = blocks[bType][rot][i][j];
+                    board[ty][tx] = shapeChar;
             }
+        }
 }
  
-void clearFromBoard(int bType, int rot, int bx, int by) {
+void clearFromBoard(Piece* piece, int bx, int by) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[bType][rot][i][j] != ' ') {
+            if (piece->getShape(i, j) != ' ') {
                 int tx = bx + j, ty = by + i;
                 if (ty >= 0 && ty < H && tx >= 0 && tx < W)
                     board[ty][tx] = ' ';
@@ -393,7 +393,7 @@ void clearFromBoard(int bType, int rot, int bx, int by) {
 // Ghost piece: tính v? trí shadow (kh?i bóng)
 int ghostY() {
     int gy = py;
-    while (canPlace(curBlock, curRot, px, gy + 1)) gy++;
+    while (canPlace(curPiece, px, gy + 1)) gy++;
     return gy;
 }
  
@@ -405,7 +405,7 @@ void draw() {
     int gy = ghostY();
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[curBlock][curRot][i][j] != ' ') {
+            if (curPiece->getShape(i,j) != ' ') {
                 int tx = px + j, ty = gy + i;
                 if (ty >= 0 && ty < H && tx >= 0 && tx < W && board[ty][tx] == ' ')
                     board[ty][tx] = '.'; // ghost marker
@@ -449,7 +449,7 @@ void draw() {
     // Xóa ghost kh?i board sau khi v?
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[curBlock][curRot][i][j] != ' ') {
+            if (curPiece->getShape(i,j) != ' ') {
                 int tx = px + j, ty = gy + i;
                 if (ty >= 0 && ty < H && tx >= 0 && tx < W && board[ty][tx] == '.')
                     board[ty][tx] = ' ';
@@ -485,7 +485,7 @@ bool spawnBlock() {
 
     curPiece->rot = 0;
 
-    if (!canPlace(curPiece, curPiece->rot, px, py)) {
+    if (!canPlace(curPiece, px, py)) {
         gameOver = true;
         return false;
     }
@@ -524,16 +524,16 @@ int main() {
         // --- INPUT ---
         if (kbhit()) {
             char c = getch();
-            clearFromBoard(curBlock, curRot, px, py);
+            clearFromBoard(curPiece, px, py);
  
             if (c == 'a' || c == 75) { // trái
-                if (canPlace(curBlock, curRot, px-1, py)) px--;
+                if (canPlace(curPiece, px-1, py)) px--;
             }
             else if (c == 'd' || c == 77) { // ph?i
-                if (canPlace(curBlock, curRot, px+1, py)) px++;
+                if (canPlace(curPiece, px+1, py)) px++;
             }
             else if (c == 's' || c == 80) { // soft drop
-                if (canPlace(curBlock, curRot, px, py+1)) {
+                if (canPlace(curPiece, px, py+1)) {
                     py++;
                     score++;
                     lastFall = GetTickCount();
@@ -541,44 +541,44 @@ int main() {
             }
             else if (c == ' ') { // HARD DROP
                 int drop = 0;
-                while (canPlace(curBlock, curRot, px, py+1)) { py++; drop++; }
+                while (canPlace(curPiece, px, py+1)) { py++; drop++; }
                 score += drop * 2;
-                placeOnBoard(curBlock, curRot, px, py);
+                placeOnBoard(curPiece, px, py);
                 removeLines();
                 spawnBlock();
                 lastFall = GetTickCount();
-                placeOnBoard(curBlock, curRot, px, py);
+                placeOnBoard(curPiece, px, py);
                 draw();
                 continue;
             }
             else if (c == 'w') { // xoay
                 int newRot = (curRot + 1) % 4;
-                if (canPlace(curBlock, newRot, px, py)) curRot = newRot;
+                if (canPlace(curPiece, px, py)) curRot = newRot;
                 // Wall kick don gi?n
-                else if (canPlace(curBlock, newRot, px+1, py)) { curRot = newRot; px++; }
-                else if (canPlace(curBlock, newRot, px-1, py)) { curRot = newRot; px--; }
+                else if (canPlace(curPiece, px+1, py)) { curRot = newRot; px++; }
+                else if (canPlace(curPiece, px-1, py)) { curRot = newRot; px--; }
             }
             else if (c == 'q') break;
  
-            placeOnBoard(curBlock, curRot, px, py);
+            placeOnBoard(curPiece, px, py);
         }
  
         // --- AUTO FALL ---
         DWORD now = GetTickCount();
         if (now - lastFall >= (DWORD)fallInterval) {
-            clearFromBoard(curBlock, curRot, px, py);
-            if (canPlace(curBlock, curRot, px, py+1)) {
+           clearFromBoard(curPiece, px, py);
+            if (canPlace(curPiece, px, py+1)) {
                 py++;
             } else {
-                placeOnBoard(curBlock, curRot, px, py);
+                placeOnBoard(curPiece, px, py);
                 removeLines();
                 spawnBlock();
-                placeOnBoard(curBlock, curRot, px, py);
+                placeOnBoard(curPiece, px, py);
                 draw();
                 lastFall = GetTickCount();
                 continue;
             }
-            placeOnBoard(curBlock, curRot, px, py);
+            placeOnBoard(curPiece, px, py);
             lastFall = now;
         }
  
