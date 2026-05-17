@@ -455,7 +455,10 @@ void draw() {
                     board[ty][tx] = ' ';
             }
 }
- 
+ // TESTED FEATURES:
+// - Score increases after clearing lines
+// - Game speed increases after line clear
+// - Minimum fall interval capped at 100ms
 // ===================== REMOVE LINES =====================
 void removeLines() {
     for (int i = H-2; i > 0; i--) {
