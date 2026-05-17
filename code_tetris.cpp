@@ -142,6 +142,23 @@ char blocks[7][4][4][4] = {
       {' ','L','L',' '},
       {' ',' ',' ',' '}}}
 };
+
+//class cha cho tat ca cac block tetris
+class Piece {
+public:
+	int x, y, rot; //x: vi tri ngang, y: vi tri doc, rot: trang thai xoay (0-3)
+	
+	//contructor: block moi spawn o phia tren
+	Piece() : x(4), y(0), rot(0) {}
+	
+	//ham xoay block
+	virtual void rotate() = 0;
+	//ve block len board
+	virtual char getShape(int i, int j) = 0;
+	
+	//destructor giai phong con tro da hinh
+	virtual ~Piece() {}
+};
  
 // ===================== GAME STATE =====================
 int px = 4, py = 0;      // v? trí kh?i hi?n t?i
