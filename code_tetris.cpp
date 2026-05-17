@@ -8,7 +8,7 @@ using namespace std;
  
 #define H 22
 #define W 12
-
+char board[H][W];
 //code nguoi 1
 //class cha cho tat ca cac block tetris
 class Piece {
@@ -319,6 +319,7 @@ void fillBag() {
 }
  
 Piece* createPiece(int type) {
+    switch(type) {
     case 1: return new OPiece();
     case 2: return new TPiece();
     case 3: return new SPiece();
@@ -362,7 +363,7 @@ bool canPlace(Piece* piece, int bx, int by) {
             if (curPiece->getShape(i,j) != ' ') {
                 int tx = bx + j;
                 int ty = by + i;
-                if (tx < 1 || tx >= W-1 || ty >= H-1) return false;
+                if (tx <= 0 || tx >= W-1 || ty >= H-1)return false;
                 if (ty >= 0 && board[ty][tx] != ' ') return false;
             }
     return true;
@@ -400,7 +401,7 @@ int ghostY() {
 // ===================== DRAW =====================
 void draw() {
     gotoxy(0, 0);
- 
+ setColor(7);
     // V? ghost piece
     int gy = ghostY();
     for (int i = 0; i < 4; i++)
@@ -454,6 +455,7 @@ void draw() {
                 if (ty >= 0 && ty < H && tx >= 0 && tx < W && board[ty][tx] == '.')
                     board[ty][tx] = ' ';
             }
+            setColor(7);
 }
  // TESTED FEATURES:
 // - Score increases after clearing lines
@@ -555,14 +557,15 @@ int main() {
                 lastFall = GetTickCount();
                 placeOnBoard(curPiece, px, py);
                 draw();
+                Sleep(50);
                 continue;
             }
             else if (c == 'w') { // xoay
-                int newRot = (curRot + 1) % 4;
-                if (canPlace(curPiece, px, py)) curRot = newRot;
+                int newRot = (curPiece->rot + 1) % 4;
+                if (canPlace(curPiece, px, py)) curPiece->rot = newRot;
                 // Wall kick don gi?n
-                else if (canPlace(curPiece, px+1, py)) { curRot = newRot; px++; }
-                else if (canPlace(curPiece, px-1, py)) { curRot = newRot; px--; }
+                else if (canPlace(curPiece, px+1, py)) { curPiece->rot = newRot;; px++; }
+                else if (canPlace(curPiece, px-1, py)) { curPiece->rot = newRot;; px--; }
             }
             else if (c == 'q') break;
  
@@ -590,7 +593,7 @@ int main() {
  
         // --- RENDER ---
         draw();
-        Sleep(16); // ~60fps cap
+        Sleep(30); // 
     }
  
     if (gameOver) showGameOver();
