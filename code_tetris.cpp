@@ -5,8 +5,11 @@
 #include <algorithm>
 #include <random>
 #include <fstream>
+#include <string>
+#include <sstream>
 using namespace std;
- 
+string playerName = "Player";
+string webAppUrl = "https://script.google.com/macros/s/AKfycbwlvO2zWiI7Ep4mrlGOVvCN4rBEtW9Yf8hZPeKVdHJgXQLLBT2h1AoGEz1Ujk6LtVI2/exec";
 #define H 22
 #define W 12
 char board[H][W]; //game boarch luu trang thai cac o
@@ -361,7 +364,40 @@ Piece* nextBlock() {
     if (bagIdx >= 7) fillBag();
     return createPiece(bag[bagIdx++]);
 }
- 
+ // ===================== ONLINE LEADERBOARD HELPERS =====================
+// Hàm gửi điểm lên Google Sheet
+void uploadOnlineScore(string name, int currentScore) {
+    // Sử dụng lệnh curl của Windows, thêm tham số -L vì Google URL có cơ chế redirect
+    string cmd = "curl -s -L \"" + webAppUrl + "?name=" + name + "&score=" + to_string(currentScore) + "\" > nul";
+    system(cmd.c_str());
+}
+
+// Hàm tải dữ liệu top 5 về và in ra màn hình
+void showOnlineLeaderboard() {
+    cout << "  Connecting to server...\n";
+    string cmd = "curl -s -L \"" + webAppUrl + "\" > online_temp.txt";
+    system(cmd.c_str()); // Tải bảng xếp hạng về file tạm
+    
+    ifstream file("online_temp.txt");
+    string line;
+    setColor(11); // Màu xanh dương nhạt cho bảng xếp hạng online
+    cout << "\n  --- TOP 5 GLOBAL LEADERBOARD ---\n";
+    int count = 0;
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            if(!line.empty()) {
+                cout << "   " << line << "\n";
+                count++;
+            }
+        }
+        file.close();
+        if(count == 0) cout << "   Chua co ai ghi diem.\n";
+    } else {
+        cout << "   Khong the ket noi Internet.\n";
+    }
+    // Xóa file tạm sau khi dùng xong
+    remove("online_temp.txt");
+}
 // ===================== HELPERS =====================
 //doi mau
 void setColor(int color) {
@@ -569,6 +605,7 @@ bool spawnBlock() {
 void showGameOver() {
     bool isNewRecord = (score > highScore); 
     saveHighScore(score);
+    uploadOnlineScore(playerName, score);
 	gameOverSound();
     system("cls");
     setColor(12);
@@ -582,7 +619,14 @@ void showGameOver() {
     }
     setColor(14);
     cout << "\n  Final Score: " << score << "\n";
-    cout << "  High Score: " << (isNewRecord ? score : highScore) << "\n\n";
+    cout << "  Local High Score: " << (isNewRecord ? score : highScore) << "\n";
+    
+    // ===== HIỂN THỊ BẢNG XẾP HẠNG ONLINE =====
+    showOnlineLeaderboard();
+    // =========================================
+    
+    cout << "\n";
+
     setColor(15);
     cout << "  Press any key to exit...\n";
     setColor(7);
@@ -594,6 +638,10 @@ int main() {
 	//khoi tao random va giao dien
     srand((unsigned)time(0));
     hideCursor();
+    system("cls");
+    setColor(15);
+    cout << "Enter player name: ";
+    cin >> playerName;
     system("cls");
     highScore = loadHighScore();
     initBoard();
