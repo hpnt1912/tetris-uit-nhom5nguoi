@@ -588,6 +588,7 @@ int main() {
                     curPiece->rot = oldRot; 
                 }
             }
+            //an q thi ket thuc game
             else if (c == 'q'){
             	gameOver = true;
             	break;
@@ -617,7 +618,7 @@ int main() {
  
         // --- RENDER ---
         draw();
-        Sleep(30); // 
+        Sleep(30);
     }
  
     if (gameOver) showGameOver();
