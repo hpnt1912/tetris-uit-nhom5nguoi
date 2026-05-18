@@ -364,7 +364,7 @@ void initBoard() {
             else board[i][j] = ' ';
         }
 }
- 
+//kiem tra block co dat hop le tai vi tri moi ko
 bool canPlace(Piece* piece, int bx, int by) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
@@ -376,7 +376,7 @@ bool canPlace(Piece* piece, int bx, int by) {
             }
     return true;
 }
- 
+//ve block len board
 void placeOnBoard(Piece* piece, int bx, int by) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++){
@@ -388,7 +388,7 @@ void placeOnBoard(Piece* piece, int bx, int by) {
             }
         }
 }
- 
+//xoa block tam thoi de tinh toan di chuyen
 void clearFromBoard(Piece* piece, int bx, int by) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
@@ -399,7 +399,7 @@ void clearFromBoard(Piece* piece, int bx, int by) {
             }
 }
  
-// Ghost piece: tính v? trí shadow (kh?i bóng)
+//tim vi tri cuoi cung cua block
 int ghostY() {
     int gy = py;
     while (canPlace(curPiece, px, gy + 1)) gy++;
