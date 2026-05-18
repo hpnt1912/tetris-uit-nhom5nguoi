@@ -418,7 +418,7 @@ void moveSound() {
 }
 
 void rotateSound() {
-    Beep(900, 40);
+    Beep(1000, 50);
 }
 
 void clearLineSound() {
@@ -614,17 +614,17 @@ int main() {
             }
             else if (c == 'w') { // xoay
                 int oldRot = curPiece->rot;
-                curPiece->rot = (curPiece->rot + 1) % 4; // C?p nh?t góc xoay m?i tru?c d? test
+                curPiece->rot = (curPiece->rot + 1) % 4; // C?p nh?t gï¿½c xoay m?i tru?c d? test
                 
                 if (canPlace(curPiece, px, py)) {
                 	rotateSound();
-                    // H?p l?, gi? nguyên góc xoay m?i
+                    // H?p l?, gi? nguyï¿½n gï¿½c xoay m?i
                 }
                 // Wall kick don gi?n
                 else if (canPlace(curPiece, px + 1, py)) { px++; rotateSound(); }
                 else if (canPlace(curPiece, px - 1, py)) { px--; rotateSound(); }
                 else {
-                    // N?u k?t m?i hu?ng, h?y b? xoay và tr? v? góc cu
+                    // N?u k?t m?i hu?ng, h?y b? xoay vï¿½ tr? v? gï¿½c cu
                     curPiece->rot = oldRot; 
                 }
             }
