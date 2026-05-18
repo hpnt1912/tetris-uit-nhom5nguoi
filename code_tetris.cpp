@@ -108,6 +108,7 @@ public:
     }
 };
 
+//block T
 class TPiece : public Piece {
 public:
     void rotate() override {
@@ -146,6 +147,7 @@ public:
     }
 };
 
+//block S
 class SPiece : public Piece {
 public:
     void rotate() override {
