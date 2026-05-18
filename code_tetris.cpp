@@ -513,6 +513,7 @@ bool spawnBlock() {
     return true;
 }
  
+//in man hinh ket thuc game
 // ===================== GAME OVER SCREEN =====================
 void showGameOver() {
     system("cls");
@@ -531,6 +532,7 @@ void showGameOver() {
  
 // ===================== MAIN =====================
 int main() {
+	//khoi tao random va giao dien
     srand((unsigned)time(0));
     hideCursor();
     system("cls");
@@ -545,10 +547,10 @@ int main() {
             char c = getch();
             clearFromBoard(curPiece, px, py);
  
-            if (c == 'a' || c == 75) { // trái
+            if (c == 'a' || c == 75) { // trai
                 if (canPlace(curPiece, px-1, py)) px--;
             }
-            else if (c == 'd' || c == 77) { // ph?i
+            else if (c == 'd' || c == 77) { // phai
                 if (canPlace(curPiece, px+1, py)) px++;
             }
             else if (c == 's' || c == 80) { // soft drop
