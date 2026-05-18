@@ -186,6 +186,7 @@ public:
     }
 };
 
+//block Z
 class ZPiece : public Piece {
 public:
     void rotate() override {
@@ -224,6 +225,7 @@ public:
     }
 };
 
+//block J
 class JPiece : public Piece {
 public:
     void rotate() override {
