@@ -384,7 +384,10 @@ int main() {
                 else if (canPlace(curBlock, newRot, px+1, py)) { curRot = newRot; px++; }
                 else if (canPlace(curBlock, newRot, px-1, py)) { curRot = newRot; px--; }
             }
-            else if (c == 'q') break;
+            else if (c == 'q'){
+            	gameOver = true;
+            	break;
+			}
  
             placeOnBoard(curBlock, curRot, px, py);
         }
