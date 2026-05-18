@@ -407,9 +407,10 @@ int ghostY() {
 }
  
 // ===================== DRAW =====================
+//render toan bo giao dien game
 void draw() {
     gotoxy(0, 0);
- setColor(7);
+    setColor(7);
     // V? ghost piece
     int gy = ghostY();
     for (int i = 0; i < 4; i++)
@@ -470,6 +471,7 @@ void draw() {
 // - Game speed increases after line clear
 // - Minimum fall interval capped at 100ms
 // ===================== REMOVE LINES =====================
+//kiem tra va xoa dong day
 void removeLines() {
     for (int i = H-2; i > 0; i--) {
         bool full = true;
@@ -477,10 +479,10 @@ void removeLines() {
             if (board[i][j] == ' ') { full = false; break; }
         if (full) {
             // Board sends clear-line event here
-// Increase score and game speed after line clear
+            // Increase score and game speed after line clear
             score += 100;
             if (fallInterval > 100)
-    fallInterval -= 20;
+                fallInterval -= 20;
             for (int ii = i; ii > 1; ii--)
                 for (int j = 1; j < W-1; j++)
                     board[ii][j] = board[ii-1][j];
@@ -491,8 +493,9 @@ void removeLines() {
 }
  
 // ===================== SPAWN =====================
+//tao block moi o vi tri spawn mac dinh
 bool spawnBlock() {
-
+    //reset goc xoay
     if (curPiece) delete curPiece;
 
     curPiece = nextBlock();
@@ -501,7 +504,7 @@ bool spawnBlock() {
     py = 0;
 
     curPiece->rot = 0;
-
+    //neu spawn trung thi gameover
     if (!canPlace(curPiece, px, py)) {
         gameOver = true;
         return false;
