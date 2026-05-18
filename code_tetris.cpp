@@ -418,7 +418,8 @@ void moveSound() {
 }
 
 void rotateSound() {
-    Beep(900, 40);
+    Beep(1500, 80);
+    Beep(1200, 50);
 }
 
 void clearLineSound() {
