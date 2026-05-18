@@ -30,6 +30,7 @@ public:
 //code nguoi 2
 // ===== DERIVED PIECES =====
 
+//block I
 class IPiece : public Piece {
 public:
     void rotate() override {
@@ -68,6 +69,7 @@ public:
     }
 };
 
+//block O
 class OPiece : public Piece {
 public:
     void rotate() override {
