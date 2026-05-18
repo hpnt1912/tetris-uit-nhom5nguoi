@@ -308,6 +308,7 @@ bool gameOver = false; //trang thai game
 int bag[7]; //random 7 block
 int bagIdx = 7; // force refill on first use, refill luc khoi tao
  
+ //tao lai 7 block va cho ra ngau nhien
 void fillBag() {
     for (int i = 0; i < 7; i++) bag[i] = i;
     // Fisher-Yates shuffle
@@ -318,6 +319,7 @@ void fillBag() {
     bagIdx = 0;
 }
  
+//tao dung cac loai block
 Piece* createPiece(int type) {
     switch(type) {
     case 0: return new IPiece();
@@ -331,6 +333,7 @@ Piece* createPiece(int type) {
     return nullptr;
 }
 
+//lay block tiep theo tu bag
 Piece* nextBlock() {
     if (bagIdx >= 7) fillBag();
     return createPiece(bag[bagIdx++]);
