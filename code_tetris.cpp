@@ -4,6 +4,7 @@
 #include <ctime>
 #include <algorithm>
 #include <random>
+#include <fstream>
 using namespace std;
  
 #define H 22
@@ -310,6 +311,22 @@ Piece* curPiece = nullptr; //block hien tai dang roi
 int score = 0; //diem hien tai
 bool gameOver = false; //trang thai game
  int fallInterval = 500; //toc do roi (ms)
+ int highScore = 0; 
+
+int loadHighScore() {
+    ifstream file("highscore.txt");
+    int hs = 0;
+    if (file.is_open()) { file >> hs; file.close(); }
+    return hs;
+}
+
+void saveHighScore(int currentScore) {
+    int hs = loadHighScore();
+    if (currentScore > hs) {
+        ofstream file("highscore.txt");
+        if (file.is_open()) { file << currentScore; file.close(); }
+    }
+}
 // ==========int fallInterval = 500;=========== 7-BAG RANDOMIZER =====================
 int bag[7]; //random 7 block
 int bagIdx = 7; // force refill on first use, refill luc khoi tao
@@ -477,12 +494,15 @@ void draw() {
         // Hi?n score ? bên ph?i
         if (i == 2) { setColor(15); cout << "  SCORE"; }
         if (i == 3) { setColor(14); cout << "  " << score; }
-        if (i == 5) { setColor(15); cout << "  CONTROLS"; }
-        if (i == 6) { setColor(7);  cout << "  A/D: Move"; }
-        if (i == 7) { setColor(7);  cout << "  W: Rotate"; }
-        if (i == 8) { setColor(7);  cout << "  S: Soft drop"; }
-        if (i == 9) { setColor(7);  cout << "  Space: Hard drop"; }
-        if (i == 10){ setColor(7);  cout << "  Q: Quit"; }
+        if (i == 5) { setColor(15); cout << "  HIGH SCORE"; }
+        if (i == 6) { setColor(11); cout << "  " << (score > highScore ? score : highScore); } 
+        
+        if (i == 8) { setColor(15); cout << "  CONTROLS"; }
+        if (i == 9) { setColor(7);  cout << "  A/D: Move"; }
+        if (i == 10) { setColor(7);  cout << "  W: Rotate"; }
+        if (i == 11) { setColor(7);  cout << "  S: Soft drop"; }
+        if (i == 12) { setColor(7);  cout << "  Space: Hard drop"; }
+        if (i == 13){ setColor(7);  cout << "  Q: Quit"; }
         cout << "\n";
     }
  
@@ -547,6 +567,8 @@ bool spawnBlock() {
 //in man hinh ket thuc game
 // ===================== GAME OVER SCREEN =====================
 void showGameOver() {
+    bool isNewRecord = (score > highScore); 
+    saveHighScore(score);
 	gameOverSound();
     system("cls");
     setColor(12);
@@ -554,8 +576,13 @@ void showGameOver() {
     cout << "  ========================\n";
     cout << "       GAME  OVER!\n";
     cout << "  ========================\n";
+    if (isNewRecord) {
+        setColor(10); 
+        cout << "\n   NEW HIGH SCORE!!!\n";
+    }
     setColor(14);
-    cout << "\n  Final Score: " << score << "\n\n";
+    cout << "\n  Final Score: " << score << "\n";
+    cout << "  High Score: " << (isNewRecord ? score : highScore) << "\n\n";
     setColor(15);
     cout << "  Press any key to exit...\n";
     setColor(7);
@@ -568,6 +595,7 @@ int main() {
     srand((unsigned)time(0));
     hideCursor();
     system("cls");
+    highScore = loadHighScore();
     initBoard();
     spawnBlock();
  
