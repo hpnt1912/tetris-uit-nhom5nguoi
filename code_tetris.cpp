@@ -320,6 +320,7 @@ void fillBag() {
  
 Piece* createPiece(int type) {
     switch(type) {
+    case 0: return new IPiece();
     case 1: return new OPiece();
     case 2: return new TPiece();
     case 3: return new SPiece();
@@ -561,13 +562,24 @@ int main() {
                 continue;
             }
             else if (c == 'w') { // xoay
-                int newRot = (curPiece->rot + 1) % 4;
-                if (canPlace(curPiece, px, py)) curPiece->rot = newRot;
+                int oldRot = curPiece->rot;
+                curPiece->rot = (curPiece->rot + 1) % 4; // C?p nh?t góc xoay m?i tru?c d? test
+                
+                if (canPlace(curPiece, px, py)) {
+                    // H?p l?, gi? nguyên góc xoay m?i
+                }
                 // Wall kick don gi?n
-                else if (canPlace(curPiece, px+1, py)) { curPiece->rot = newRot;; px++; }
-                else if (canPlace(curPiece, px-1, py)) { curPiece->rot = newRot;; px--; }
+                else if (canPlace(curPiece, px + 1, py)) { px++; }
+                else if (canPlace(curPiece, px - 1, py)) { px--; }
+                else {
+                    // N?u k?t m?i hu?ng, h?y b? xoay và tr? v? góc cu
+                    curPiece->rot = oldRot; 
+                }
             }
-            else if (c == 'q') break;
+            else if (c == 'q'){
+            	gameOver = true;
+            	break;
+			}
  
             placeOnBoard(curPiece, px, py);
         }
