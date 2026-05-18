@@ -340,19 +340,23 @@ Piece* nextBlock() {
 }
  
 // ===================== HELPERS =====================
+//doi mau
 void setColor(int color) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
+//dua con tro toi vi tri x,y
 void gotoxy(int x, int y) {
     COORD c = {(SHORT)x, (SHORT)y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
+//an con tro
 void hideCursor() {
     CONSOLE_CURSOR_INFO ci = {1, FALSE};
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &ci);
 }
  
 // ===================== BOARD =====================
+//khoi tao board va tuong bao quanh
 void initBoard() {
     for (int i = 0; i < H; i++)
         for (int j = 0; j < W; j++) {
