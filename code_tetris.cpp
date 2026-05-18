@@ -8,7 +8,7 @@ using namespace std;
  
 #define H 22
 #define W 12
-char board[H][W];
+char board[H][W]; //game boarch luu trang thai cac o
 //code nguoi 1
 //class cha cho tat ca cac block tetris
 class Piece {
@@ -300,13 +300,13 @@ public:
  
 // ===================== GAME STATE =====================
 int px = 4, py = 0;      // v? trí kh?i hi?n t?i
-Piece* curPiece = nullptr;
-int score = 0;
-bool gameOver = false;
- int fallInterval = 500;
+Piece* curPiece = nullptr; //block hien tai dang roi
+int score = 0; //diem hien tai
+bool gameOver = false; //trang thai game
+ int fallInterval = 500; //toc do roi (ms)
 // ==========int fallInterval = 500;=========== 7-BAG RANDOMIZER =====================
-int bag[7];
-int bagIdx = 7; // force refill on first use
+int bag[7]; //random 7 block
+int bagIdx = 7; // force refill on first use, refill luc khoi tao
  
 void fillBag() {
     for (int i = 0; i < 7; i++) bag[i] = i;
