@@ -412,6 +412,30 @@ int ghostY() {
     return gy;
 }
  
+//code am thanh cho game
+void moveSound() {
+    Beep(700, 30);
+}
+
+void rotateSound() {
+    Beep(900, 40);
+}
+
+void clearLineSound() {
+    Beep(1200, 80);
+    Beep(1400, 80);
+}
+
+void dropSound() {
+    Beep(500, 60);
+}
+
+void gameOverSound() {
+    Beep(400, 200);
+    Beep(300, 200);
+    Beep(200, 300);
+}
+
 // ===================== DRAW =====================
 //render toan bo giao dien game
 void draw() {
@@ -487,6 +511,7 @@ void removeLines() {
             // Board sends clear-line event here
             // Increase score and game speed after line clear
             score += 100;
+            clearLineSound();
             if (fallInterval > 100)
                 fallInterval -= 20;
             for (int ii = i; ii > 1; ii--)
@@ -522,6 +547,7 @@ bool spawnBlock() {
 //in man hinh ket thuc game
 // ===================== GAME OVER SCREEN =====================
 void showGameOver() {
+	gameOverSound();
     system("cls");
     setColor(12);
     cout << "\n\n";
@@ -554,10 +580,16 @@ int main() {
             clearFromBoard(curPiece, px, py);
  
             if (c == 'a' || c == 75) { // trai
-                if (canPlace(curPiece, px-1, py)) px--;
+                if (canPlace(curPiece, px-1, py)){
+                	px--;
+                	moveSound();
+				}
             }
             else if (c == 'd' || c == 77) { // phai
-                if (canPlace(curPiece, px+1, py)) px++;
+                if (canPlace(curPiece, px+1, py)){
+                	px++;
+                	moveSound();
+				}
             }
             else if (c == 's' || c == 80) { // soft drop
                 if (canPlace(curPiece, px, py+1)) {
@@ -570,6 +602,7 @@ int main() {
                 int drop = 0;
                 while (canPlace(curPiece, px, py+1)) { py++; drop++; }
                 score += drop * 2;
+                dropSound();
                 placeOnBoard(curPiece, px, py);
                 removeLines();
                 spawnBlock();
@@ -584,11 +617,12 @@ int main() {
                 curPiece->rot = (curPiece->rot + 1) % 4; // C?p nh?t góc xoay m?i tru?c d? test
                 
                 if (canPlace(curPiece, px, py)) {
+                	rotateSound();
                     // H?p l?, gi? nguyên góc xoay m?i
                 }
                 // Wall kick don gi?n
-                else if (canPlace(curPiece, px + 1, py)) { px++; }
-                else if (canPlace(curPiece, px - 1, py)) { px--; }
+                else if (canPlace(curPiece, px + 1, py)) { px++; rotateSound(); }
+                else if (canPlace(curPiece, px - 1, py)) { px--; rotateSound(); }
                 else {
                     // N?u k?t m?i hu?ng, h?y b? xoay và tr? v? góc cu
                     curPiece->rot = oldRot; 
