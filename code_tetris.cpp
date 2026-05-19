@@ -327,7 +327,10 @@ void saveHighScore(int currentScore) {
     int hs = loadHighScore();
     if (currentScore > hs) {
         ofstream file("highscore.txt");
-        if (file.is_open()) { file << currentScore; file.close(); }
+        if (file.is_open()) {
+            file << playerName << " " << currentScore;
+            file.close();
+        }
     }
 }
 // ==========int fallInterval = 500;=========== 7-BAG RANDOMIZER =====================
@@ -635,7 +638,7 @@ void showGameOver() {
  
 // ===================== MAIN =====================
 int main() {
-	//khoi tao random va giao dien
+    //khoi tao random va giao dien
     srand((unsigned)time(0));
     hideCursor();
     system("cls");
