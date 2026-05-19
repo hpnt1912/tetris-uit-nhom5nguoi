@@ -674,18 +674,6 @@ int main() {
     setColor(15);
     cout << "Enter player name: ";
     getline(cin >> ws, playerName);
-    char confirm;
-do {
-    cout << "Confirm name (Y/N): ";
-    confirm = getch();
-
-    if (confirm == 'n' || confirm == 'N') {
-        system("cls");
-        cout << "Re-enter player name: ";
-        getline(cin >> ws, playerName);
-    }
-
-} while (confirm != 'y' && confirm != 'Y');
     system("cls");
     highScore = loadHighScore();
     initBoard();
