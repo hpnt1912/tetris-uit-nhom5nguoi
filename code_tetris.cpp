@@ -378,14 +378,14 @@ Piece* nextBlock() {
  // ===================== ONLINE LEADERBOARD HELPERS =====================
 // HÃ m gá»­i Ä‘iá»ƒm lÃªn Google Sheet
 void uploadOnlineScore(string name, int currentScore) {
-    // Bi?n d?i kho?ng tr?ng thành %20 d? URL h?p l?
+    // Bi?n d?i kho?ng tr?ng thï¿½nh %20 d? URL h?p l?
     string encodedName = "";
     for (size_t i = 0; i < name.length(); i++) {
         if (name[i] == ' ') encodedName += "%20";
         else encodedName += name[i];
     }
     
-    // Dùng encodedName thay vì name cu
+    // Dï¿½ng encodedName thay vï¿½ name cu
     string cmd = "curl -s -L \"" + webAppUrl + "?name=" + encodedName + "&score=" + to_string(currentScore) + "\" > nul";
     system(cmd.c_str());
 }
@@ -403,16 +403,16 @@ void showOnlineLeaderboard() {
     int count = 0;
     if (file.is_open()) {
         while (getline(file, line)) {
-            // Lo?i b? kho?ng tr?ng th?a (carriage return) n?u có trên Windows
+            // Lo?i b? kho?ng tr?ng th?a (carriage return) n?u cï¿½ trï¿½n Windows
             if (!line.empty() && line[line.length()-1] == '\r') {
                 line.erase(line.length()-1);
             }
             
-            // CH? IN RA N?U DÒNG ÐÓ KHÔNG TR?NG VÀ KHÔNG CH?A TH? HTML (<, >)
+            // CH? IN RA N?U Dï¿½NG ï¿½ï¿½ KHï¿½NG TR?NG Vï¿½ KHï¿½NG CH?A TH? HTML (<, >)
             if(!line.empty() && line.find("<") == string::npos && line.find(">") == string::npos) {
                 cout << "   " << line << "\n";
                 count++;
-                if (count >= 5) break; // Ch? l?y dúng 5 ngu?i d?ng d?u
+                if (count >= 5) break; // Ch? l?y dï¿½ng 5 ngu?i d?ng d?u
             }
         }
         file.close();
@@ -624,14 +624,14 @@ bool spawnBlock() {
 //in man hinh ket thuc game
 // ===================== GAME OVER SCREEN =====================
 void showGameOver() {
-    // 1. L?y di?m k? l?c cu t? file lên tru?c d? so sánh
+    // 1. L?y di?m k? l?c cu t? file lï¿½n tru?c d? so sï¿½nh
     int currentHighScore = loadHighScore();
     bool isNewRecord = (score > currentHighScore); 
     
-    // 2. Luu di?m ván này l?i (hàm save dã t? check n?u cao hon m?i luu)
+    // 2. Luu di?m vï¿½n nï¿½y l?i (hï¿½m save dï¿½ t? check n?u cao hon m?i luu)
     saveHighScore(score);
     
-    // 3. G?i di?m lên Google Sheets
+    // 3. G?i di?m lï¿½n Google Sheets
     uploadOnlineScore(playerName, score);
     
     gameOverSound();
@@ -653,7 +653,7 @@ void showGameOver() {
     cout << "\n  Final Score: " << score << "\n";
     cout << "  Local High Score: " << (isNewRecord ? score : currentHighScore) << "\n";
     
-    // G?i hàm hi?n b?ng x?p h?ng online du?i này...
+    // G?i hï¿½m hi?n b?ng x?p h?ng online du?i nï¿½y...
     showOnlineLeaderboard();
     // =========================================
     
@@ -674,6 +674,18 @@ int main() {
     setColor(15);
     cout << "Enter player name: ";
     getline(cin >> ws, playerName);
+    char confirm;
+do {
+    cout << "Confirm name (Y/N): ";
+    confirm = getch();
+
+    if (confirm == 'n' || confirm == 'N') {
+        system("cls");
+        cout << "Re-enter player name: ";
+        getline(cin >> ws, playerName);
+    }
+
+} while (confirm != 'y' && confirm != 'Y');
     system("cls");
     highScore = loadHighScore();
     initBoard();
