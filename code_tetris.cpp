@@ -7,11 +7,18 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+
 using namespace std;
 string playerName = "Player";
 string webAppUrl = "https://script.google.com/macros/s/AKfycbwlvO2zWiI7Ep4mrlGOVvCN4rBEtW9Yf8hZPeKVdHJgXQLLBT2h1AoGEz1Ujk6LtVI2/exec";
 #define H 22
 #define W 12
+
+//doi mau
+void setColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
 char board[H][W]; //game boarch luu trang thai cac o
 //code nguoi 1
 //class cha cho tat ca cac block tetris
@@ -405,10 +412,6 @@ void showOnlineLeaderboard() {
     remove("online_temp.txt");
 }
 // ===================== HELPERS =====================
-//doi mau
-void setColor(int color) {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
-}
 //dua con tro toi vi tri x,y
 void gotoxy(int x, int y) {
     COORD c = {(SHORT)x, (SHORT)y};
