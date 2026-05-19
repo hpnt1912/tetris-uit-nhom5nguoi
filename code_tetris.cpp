@@ -551,7 +551,7 @@ void draw() {
         // Hi?n score ? bên ph?i
         if (i == 2) { setColor(15); cout << "  SCORE"; }
         if (i == 3) { setColor(14); cout << "  " << score; }
-        if (i == 5) { setColor(15); cout << "  HIGH SCORE"; }
+        if (i == 5) { setColor(15); cout << "  HIGHEST SCORE"; }
         if (i == 6) { setColor(11); cout << "  " << (score > highScore ? score : highScore); } 
         
         if (i == 8) { setColor(15); cout << "  CONTROLS"; }
@@ -646,12 +646,12 @@ void showGameOver() {
     // CH? HI?N KHI TH?C S? VU?T K? L?C CU
     if (isNewRecord) {
         setColor(10); 
-        cout << "\n  NEW HIGH SCORE!!!\n";
+        cout << "\n  NEW HIGHEST SCORE!!!\n";
     }
     
     setColor(14);
     cout << "\n  Final Score: " << score << "\n";
-    cout << "  Local High Score: " << (isNewRecord ? score : currentHighScore) << "\n";
+    cout << "  Local Highest Score: " << (isNewRecord ? score : currentHighScore) << "\n";
     
     // G?i h�m hi?n b?ng x?p h?ng online du?i n�y...
     showOnlineLeaderboard();
@@ -672,17 +672,60 @@ int main() {
     hideCursor();
     system("cls");
     setColor(15);
+    setColor(11);
     cout << "Enter player name: ";
+    setColor(15);
+
     getline(cin >> ws, playerName);
-    transform(
-    playerName.begin(),
-    playerName.end(),
-    playerName.begin(),
-    ::toupper
-    );
-    cout << "Welcome " << playerName;
-    Sleep(1000);
-    
+
+    char confirm;
+    do {
+        setColor(14);
+        cout << "Confirm name (Y/N): ";
+        setColor(15);
+
+        confirm = getch();
+
+        if (confirm == 'n' || confirm == 'N') {
+            system("cls");
+
+            setColor(12);
+            cout << "Re-enter player name: ";
+            setColor(15);
+
+            getline(cin >> ws, playerName);
+        }
+
+    } while (confirm != 'y' && confirm != 'Y');
+
+    system("cls");
+
+    setColor(13);
+    cout << "\n\n";
+    cout << "====================================\n";
+
+    setColor(10);
+    cout << "        WELCOME TO TETRIS\n";
+
+    setColor(13);
+    cout << "====================================\n\n";
+
+    setColor(14);
+    cout << "        PLAYER: ";
+
+    setColor(11);
+    cout << playerName << "\n\n";
+
+    setColor(7);
+    cout << "        Get Ready...\n";
+
+    Beep(800, 150);
+    Sleep(300);
+    Beep(1000, 150);
+    Sleep(300);
+    Beep(1200, 200);
+
+    Sleep(2000);
     system("cls");
     highScore = loadHighScore();
     initBoard();
