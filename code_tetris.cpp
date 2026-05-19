@@ -10,7 +10,7 @@
 
 using namespace std;
 string playerName = "Player";
-string webAppUrl = "https://script.google.com/macros/s/AKfycbwlvO2zWiI7Ep4mrlGOVvCN4rBEtW9Yf8hZPeKVdHJgXQLLBT2h1AoGEz1Ujk6LtVI2/exec";
+string webAppUrl = "https://script.google.com/macros/s/AKfycby2-rvwiJhhrekcwP5XamicMczq65xJLbfnrZvpNpJVWVSFmCkx59pqsu61Wt4xYJfAgQ/exec";
 #define H 22
 #define W 12
 
@@ -333,11 +333,9 @@ int loadHighScore() {
 void saveHighScore(int currentScore) {
     int hs = loadHighScore();
     if (currentScore > hs) {
-        cout << "New record!\n";
-
         ofstream file("highscore.txt");
         if (file.is_open()) {
-            file << playerName << " " << currentScore;
+            file << currentScore;
             file.close();
         }
     }
@@ -380,8 +378,15 @@ Piece* nextBlock() {
  // ===================== ONLINE LEADERBOARD HELPERS =====================
 // HÃ m gá»­i Ä‘iá»ƒm lÃªn Google Sheet
 void uploadOnlineScore(string name, int currentScore) {
-    // Sá»­ dá»¥ng lá»‡nh curl cá»§a Windows, thÃªm tham sá»‘ -L vÃ¬ Google URL cÃ³ cÆ¡ cháº¿ redirect
-    string cmd = "curl -s -L \"" + webAppUrl + "?name=" + name + "&score=" + to_string(currentScore) + "\" > nul";
+    // Bi?n d?i kho?ng tr?ng thành %20 d? URL h?p l?
+    string encodedName = "";
+    for (size_t i = 0; i < name.length(); i++) {
+        if (name[i] == ' ') encodedName += "%20";
+        else encodedName += name[i];
+    }
+    
+    // Dùng encodedName thay vì name cu
+    string cmd = "curl -s -L \"" + webAppUrl + "?name=" + encodedName + "&score=" + to_string(currentScore) + "\" > nul";
     system(cmd.c_str());
 }
 
@@ -398,13 +403,20 @@ void showOnlineLeaderboard() {
     int count = 0;
     if (file.is_open()) {
         while (getline(file, line)) {
-            if(!line.empty()) {
+            // Lo?i b? kho?ng tr?ng th?a (carriage return) n?u có trên Windows
+            if (!line.empty() && line[line.length()-1] == '\r') {
+                line.erase(line.length()-1);
+            }
+            
+            // CH? IN RA N?U DÒNG ÐÓ KHÔNG TR?NG VÀ KHÔNG CH?A TH? HTML (<, >)
+            if(!line.empty() && line.find("<") == string::npos && line.find(">") == string::npos) {
                 cout << "   " << line << "\n";
                 count++;
+                if (count >= 5) break; // Ch? l?y dúng 5 ngu?i d?ng d?u
             }
         }
         file.close();
-        if(count == 0) cout << "   Chua co ai ghi diem.\n";
+        if(count == 0) cout << "   Chua co ai ghi diem hoac loi may chu.\n";
     } else {
         cout << "   Khong the ket noi Internet.\n";
     }
@@ -612,25 +624,36 @@ bool spawnBlock() {
 //in man hinh ket thuc game
 // ===================== GAME OVER SCREEN =====================
 void showGameOver() {
-    bool isNewRecord = (score > highScore); 
+    // 1. L?y di?m k? l?c cu t? file lên tru?c d? so sánh
+    int currentHighScore = loadHighScore();
+    bool isNewRecord = (score > currentHighScore); 
+    
+    // 2. Luu di?m ván này l?i (hàm save dã t? check n?u cao hon m?i luu)
     saveHighScore(score);
+    
+    // 3. G?i di?m lên Google Sheets
     uploadOnlineScore(playerName, score);
-	gameOverSound();
+    
+    gameOverSound();
     system("cls");
+    
     setColor(12);
     cout << "\n\n";
     cout << "  ========================\n";
-    cout << "       GAME  OVER!\n";
+    cout << "        GAME  OVER!\n";
     cout << "  ========================\n";
+    
+    // CH? HI?N KHI TH?C S? VU?T K? L?C CU
     if (isNewRecord) {
         setColor(10); 
-        cout << "\n   NEW HIGH SCORE!!!\n";
+        cout << "\n  NEW HIGH SCORE!!!\n";
     }
+    
     setColor(14);
     cout << "\n  Final Score: " << score << "\n";
-    cout << "  Local High Score: " << (isNewRecord ? score : highScore) << "\n";
+    cout << "  Local High Score: " << (isNewRecord ? score : currentHighScore) << "\n";
     
-    // ===== HIá»‚N THá»Š Báº¢NG Xáº¾P Háº NG ONLINE =====
+    // G?i hàm hi?n b?ng x?p h?ng online du?i này...
     showOnlineLeaderboard();
     // =========================================
     
@@ -650,7 +673,7 @@ int main() {
     system("cls");
     setColor(15);
     cout << "Enter player name: ";
-    cin >> playerName;
+    getline(cin >> ws, playerName);
     system("cls");
     highScore = loadHighScore();
     initBoard();
