@@ -674,6 +674,15 @@ int main() {
     setColor(15);
     cout << "Enter player name: ";
     getline(cin >> ws, playerName);
+    transform(
+    playerName.begin(),
+    playerName.end(),
+    playerName.begin(),
+    ::toupper
+    );
+    cout << "Welcome " << playerName;
+    Sleep(1000);
+    
     system("cls");
     highScore = loadHighScore();
     initBoard();
