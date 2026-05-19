@@ -326,6 +326,8 @@ int loadHighScore() {
 void saveHighScore(int currentScore) {
     int hs = loadHighScore();
     if (currentScore > hs) {
+        cout << "New record!\n";
+
         ofstream file("highscore.txt");
         if (file.is_open()) {
             file << playerName << " " << currentScore;
@@ -333,6 +335,7 @@ void saveHighScore(int currentScore) {
         }
     }
 }
+
 // ==========int fallInterval = 500;=========== 7-BAG RANDOMIZER =====================
 int bag[7]; //random 7 block
 int bagIdx = 7; // force refill on first use, refill luc khoi tao
